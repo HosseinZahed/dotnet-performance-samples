@@ -5,7 +5,6 @@ using System.Linq;
 
 namespace LinqSample
 {
-    [MemoryDiagnoser]
     [Orderer(SummaryOrderPolicy.FastestToSlowest)]
     [RankColumn]
     public class LinqBenchmarks
