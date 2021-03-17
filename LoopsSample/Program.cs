@@ -1,12 +1,12 @@
 ﻿using BenchmarkDotNet.Running;
 
-namespace LinqSample
+namespace LoopsSample
 {
     public class Program
     {
         private static void Main(string[] args)
         {
-            BenchmarkRunner.Run<LinqBenchmarks>();
+            BenchmarkRunner.Run<LoopsBenchmark>();
         }
     }
 }

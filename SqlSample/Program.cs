@@ -5,7 +5,7 @@ using SqlSample.Benchmarks;
 
 namespace SqlSample
 {
-    internal class Program
+    public class Program
     {
         private static async Task Main(string[] args)
         {
