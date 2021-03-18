@@ -23,7 +23,8 @@ namespace LoopsSample
         [Benchmark]
         public void ForLoop()
         {
-            for (int i = 0; i < _numbers.Count(); i++)
+            var count = _numbers.Count();
+            for (int i = 0; i < count; i++)
             {
                 // Do something
             }
@@ -42,7 +43,8 @@ namespace LoopsSample
         public void WhileLoop()
         {
             var i = 0;
-            while (i < _numbers.Count())
+            var count = _numbers.Count();
+            while (i < count)
             {
                 // Do something
                 i++;
@@ -53,11 +55,12 @@ namespace LoopsSample
         public void DoWhileLoop()
         {
             var i = 0;
+            var count = _numbers.Count();
             do
             {
                 // Do something
                 i++;
-            } while (i < _numbers.Count());
+            } while (i < count);
         }
     }
 }

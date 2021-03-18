@@ -7,6 +7,7 @@ namespace LinqSample
 {
     [Orderer(SummaryOrderPolicy.FastestToSlowest)]
     [RankColumn]
+    [MemoryDiagnoser]
     public class LinqBenchmarks
     {
         private readonly Dictionary<int, string> _employees = new Dictionary<int, string>
