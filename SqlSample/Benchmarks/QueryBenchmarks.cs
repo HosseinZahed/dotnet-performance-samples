@@ -1,13 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
-using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using SqlSample.DbContexts;
-using SqlSample.Models;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+using SqlSample.Services;
 using System.Threading.Tasks;
 
 namespace SqlSample.Benchmarks
@@ -17,56 +10,27 @@ namespace SqlSample.Benchmarks
     [RankColumn]
     public class QueryBenchmarks
     {
-        private readonly SqlDbContext _sqlDbContext;
-        private const string Query = "SELECT * FROM Persons ORDER BY NAME";
+        private DataService _dataService;
 
-        public QueryBenchmarks()
+        [GlobalSetup]
+        public void Setup()
         {
-            _sqlDbContext = new SqlDbContext();
+            _dataService = new DataService();
         }
 
         [Benchmark]
-        public async Task GetByEntityFramework()
-        {
-            var persons = await _sqlDbContext
-                .Persons
-                .OrderBy(p => p.Name)
-                .ToListAsync();
-        }
+        public async Task GetByEntityFramework() => await _dataService.GetByEntityFramework();
 
         [Benchmark]
-        public async Task GetByDapper()
-        {
-            await using var connection = new SqlConnection(Config.ConnectionString);
-            var persons = await connection.QueryAsync(Query);
-        }
+        public async Task GetByDapper() => await _dataService.GetByDapper();
 
         [Benchmark]
-        public async Task GetByPlainSqlConnection()
-        {
-            await using var connection = new SqlConnection(Config.ConnectionString);
-            var persons = await connection.ExecuteReaderAsync(Query);
-        }
+        public async Task GetByPlainSqlConnection() => await _dataService.GetByPlainSqlConnection();
 
         [Benchmark]
-        public async Task GetByStoredProcedureSql()
-        {
-            var persons = new List<Person>();
-            await using var connection = new SqlConnection(Config.ConnectionString);
-            await using var command = new SqlCommand("sp_GetPersons", connection)
-            {
-                CommandType = CommandType.StoredProcedure
-            };
-            await connection.OpenAsync();
-            var sqlDataReader = await command.ExecuteReaderAsync();
-            await sqlDataReader.ReadAsync();
-            await connection.CloseAsync();
-        }
+        public async Task GetByStoredProcedureSql() => await _dataService.GetByStoredProcedureSql();
 
         [Benchmark]
-        public async Task GetByStoredProcedureEf()
-        {
-            var persons = await _sqlDbContext.Persons.FromSqlRaw("sp_GetPersons").ToListAsync();
-        }
+        public async Task GetByStoredProcedureEf() => await _dataService.GetByStoredProcedureEf();
     }
 }
